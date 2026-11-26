@@ -1,0 +1,182 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Chỉ coi người dùng là Admin khi hồ sơ Firestore của UID có role = "admin".
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/account/$(request.auth.uid))
+        && get(/databases/$(database)/documents/account/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // HỒ SƠ TÀI KHOẢN
+    match /account/{userId} {
+      // Người dùng chỉ đọc hồ sơ của mình; Admin được xem danh sách tài khoản.
+      allow get: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
+
+      // Tài khoản mới chỉ được tự tạo hồ sơ user, không được tự tạo role admin.
+      allow create: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.uid == userId
+        && request.resource.data.role == "user"
+        && request.resource.data.email is string;
+
+      // Admin được phân quyền. Người dùng thường chỉ sửa thông tin cá nhân,
+      // không thể thay đổi UID hoặc role của chính mình.
+      allow update: if isAdmin()
+        || (signedIn()
+          && request.auth.uid == userId
+          && (!('uid' in resource.data) || request.resource.data.uid == resource.data.uid)
+          && ((('role' in resource.data) && request.resource.data.role == resource.data.role)
+            || (!('role' in resource.data) && request.resource.data.role == "user"))
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            "uid", "role", "username", "phone", "email", "photoURL", "updated_at",
+            "last_login", "last_provider"
+          ]));
+
+      // Không xóa hồ sơ Auth chỉ bằng cách xóa document Firestore.
+      allow delete: if false;
+
+      // BOOKMARK: mỗi người dùng chỉ được quản lý danh sách bài viết đã lưu của mình.
+      match /bookmarks/{bookmarkId} {
+        allow get, list: if signedIn() && request.auth.uid == userId;
+        allow create, update: if signedIn()
+          && request.auth.uid == userId
+          && request.resource.data.keys().hasAll([
+            "bookmarkId", "articleId", "firestoreId", "title", "poster",
+            "detail", "releaseDate", "description", "category", "source", "savedAt"
+          ])
+          && request.resource.data.keys().hasOnly([
+            "bookmarkId", "articleId", "firestoreId", "title", "poster",
+            "detail", "releaseDate", "description", "category", "source", "savedAt"
+          ])
+          && request.resource.data.bookmarkId == bookmarkId
+          && request.resource.data.articleId is string
+          && request.resource.data.firestoreId is string
+          && request.resource.data.title is string
+          && request.resource.data.title.size() <= 300
+          && request.resource.data.title.size() >= 1
+          && request.resource.data.poster is string
+          && request.resource.data.poster.size() <= 2000
+          && request.resource.data.detail is string
+          && request.resource.data.detail.size() <= 2000
+          && request.resource.data.releaseDate is string
+          && request.resource.data.description is string
+          && request.resource.data.description.size() <= 2000
+          && request.resource.data.category is string
+          && request.resource.data.source is string
+          && request.resource.data.savedAt is timestamp;
+        allow delete: if signedIn() && request.auth.uid == userId;
+      }
+    }
+
+    // BÀI VIẾT DO ĐỘC GIẢ GỬI
+    match /articles/{articleId} {
+      // Công khai bài đã xuất bản; tác giả xem bài của mình; Admin xem tất cả.
+      allow get, list: if resource.data.status == "published"
+        || (signedIn() && resource.data.authorId == request.auth.uid)
+        || isAdmin();
+
+      // Độc giả chỉ được gửi bản nháp hoặc bài chờ duyệt.
+      allow create: if signedIn()
+        && request.resource.data.keys().hasAll([
+          "title", "description", "content", "category", "authorId", "authorName", "status", "createdAt", "updatedAt"
+        ])
+        && request.resource.data.authorId == request.auth.uid
+        // User chỉ được gửi bản nháp hoặc chờ duyệt; tuyệt đối không được tự xuất bản.
+        && request.resource.data.status in ["draft", "pending"]
+        && request.resource.data.title is string
+        && request.resource.data.title.size() >= 12
+        && request.resource.data.description is string
+        && request.resource.data.description.size() >= 30
+        && request.resource.data.content is string
+        && request.resource.data.content.size() >= 100
+        && request.resource.data.category is string
+        && request.resource.data.authorName is string
+        && request.resource.data.createdAt is string
+        && request.resource.data.updatedAt is string;
+
+      // Tác giả chỉ sửa bản nháp/bài bị yêu cầu chỉnh sửa và không thể đổi tác giả.
+      // Admin có toàn quyền biên tập, duyệt, ẩn và xóa bài.
+      allow update: if isAdmin()
+        || (signedIn()
+          && resource.data.authorId == request.auth.uid
+          && resource.data.status in ["draft", "rejected"]
+          && request.resource.data.authorId == resource.data.authorId
+          && request.resource.data.status in ["draft", "pending"]
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            "title", "description", "category", "poster", "content",
+            "authorId", "authorName", "authorEmail", "status",
+            "updatedAt", "submittedAt", "publishedAt"
+          ]));
+
+      allow delete: if isAdmin();
+
+      // BÌNH LUẬN: mọi người đọc được; người đăng nhập được gửi và xóa bình luận của mình.
+      match /comments/{commentId} {
+        allow read: if true;
+
+        function authorProfile(uid) {
+          return get(/databases/$(database)/documents/account/$(uid)).data;
+        }
+        function profilePhotoURL(uid) {
+          let profile = authorProfile(uid);
+          return ("photoURL" in profile && profile.photoURL is string) ? profile.photoURL : "";
+        }
+
+        allow create: if signedIn()
+          && request.resource.data.keys().hasAll([
+            "authorId", "authorName", "authorRole", "authorPhotoURL", "content", "createdAt"
+          ])
+          && request.resource.data.keys().hasOnly([
+            "authorId", "authorName", "authorRole", "authorPhotoURL", "content", "createdAt"
+          ])
+          && request.resource.data.authorId == request.auth.uid
+          && request.resource.data.authorName is string
+          // Vai trò và avatar phải khớp hồ sơ thực trong Firestore, không tin dữ liệu tự khai.
+          && request.resource.data.authorRole == authorProfile(request.auth.uid).role
+          && request.resource.data.authorRole in ["user", "admin"]
+          && request.resource.data.authorPhotoURL is string
+          && request.resource.data.authorPhotoURL == profilePhotoURL(request.auth.uid)
+          && request.resource.data.content is string
+          && request.resource.data.content.size() >= 2
+          && request.resource.data.content.size() <= 1000
+          && request.resource.data.createdAt is timestamp;
+
+        // Admin chỉ được bổ sung nhãn vai trò và ảnh đại diện đã đối chiếu từ hồ sơ tác giả.
+        allow update: if isAdmin()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["authorRole", "authorPhotoURL"])
+          && (!('authorRole' in request.resource.data)
+            || request.resource.data.authorRole == authorProfile(resource.data.authorId).role)
+          && (!('authorPhotoURL' in request.resource.data)
+            || (request.resource.data.authorPhotoURL is string
+              && request.resource.data.authorPhotoURL == profilePhotoURL(resource.data.authorId)));
+        allow delete: if isAdmin()
+          || (signedIn() && resource.data.authorId == request.auth.uid);
+      }
+
+      // ĐÁNH GIÁ: mỗi UID chỉ có một document trên mỗi bài viết, điểm từ 1 đến 5.
+      match /ratings/{ratingUserId} {
+        allow read: if true;
+        allow create, update: if signedIn()
+          && ratingUserId == request.auth.uid
+          && request.resource.data.userId == request.auth.uid
+          && request.resource.data.score is int
+          && request.resource.data.score >= 1
+          && request.resource.data.score <= 5
+          && request.resource.data.updatedAt is timestamp
+          && request.resource.data.keys().hasOnly(["userId", "score", "updatedAt"]);
+        allow delete: if false;
+      }
+    }
+
+    // Mặc định từ chối các collection chưa được khai báo ở trên.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./img/avatar.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Quản trị | NEWS 24H</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./css/news-header.css" />
+    <link rel="stylesheet" href="./css/profile.css" />
+    <link rel="stylesheet" href="./css/admin-articles.css" />
+    <link rel="stylesheet" href="./css/bootstrap-news-theme.css" />
+    <link rel="stylesheet" href="./css/footer.css" />
+  </head>
+  <body id="top">
+    <div id="site-header" data-base="./"></div>
+    <main class="admin-page container-xl" id="admin-page">
+      <div class="account-page-heading">
+        <span>KHU VỰC QUẢN TRỊ</span>
+        <h1>Bảng điều khiển NEWS 24H</h1>
+        <p>
+          Quản lý bài do cộng tác viên gửi, chỉnh sửa nội dung và duyệt bài
+          trước khi xuất bản.
+        </p>
+      </div>
+      <section class="admin-panel card shadow-sm" id="admin-dashboard" hidden>
+        <div class="admin-stats">
+          <div class="admin-stat">
+            <strong id="admin-news-count">0</strong
+            ><span>Bài báo dữ liệu mẫu</span>
+          </div>
+          <div class="admin-stat">
+            <strong id="admin-category-count">0</strong><span>Chuyên mục</span>
+          </div>
+          <div class="admin-stat">
+            <strong id="admin-pending-count">0</strong
+            ><span>Bài chờ duyệt</span>
+          </div>
+          <div class="admin-stat">
+            <strong id="admin-published-count">0</strong
+            ><span>Bài cộng tác đã đăng</span>
+          </div>
+        </div>
+        <section
+          class="admin-users-section"
+          aria-labelledby="admin-users-heading"
+        >
+          <div class="admin-section-head">
+            <div>
+              <h2 id="admin-users-heading">Quản lý tài khoản</h2>
+              <p>Xem tài khoản đã đăng nhập và phân quyền User hoặc Admin.</p>
+            </div>
+            <span class="admin-count"
+              ><strong id="admin-users-count">0</strong> tài khoản</span
+            >
+          </div>
+          <label class="admin-users-search-label" for="admin-users-search"
+            >Tìm theo tên, email hoặc UID</label
+          >
+          <input
+            id="admin-users-search"
+            type="search"
+            class="form-control admin-users-search"
+            placeholder="Nhập tên hoặc email tài khoản..."
+            autocomplete="off"
+          />
+          <div id="admin-users-list" class="admin-users-list">
+            <div class="admin-empty">Đang tải danh sách tài khoản...</div>
+          </div>
+          <p
+            id="admin-users-message"
+            class="admin-users-message"
+            role="status"
+            aria-live="polite"
+          ></p>
+          <p class="admin-users-note">
+            Lưu ý: Mục này quản lý vai trò trên NEWS 24H. Vô hiệu hóa hoặc xóa
+            tài khoản đăng nhập Firebase cần xử lý bằng máy chủ/Cloud Functions,
+            không thực hiện trực tiếp từ trình duyệt.
+          </p>
+        </section>
+        <div class="admin-section-head">
+          <div>
+            <h2>Bài gửi chờ duyệt</h2>
+            <p>Đọc và kiểm tra nội dung trước khi đưa lên trang chủ.</p>
+          </div>
+          <span class="admin-count" id="pending-label">0 bài</span>
+        </div>
+        <div id="pending-articles" class="admin-article-list">
+          <p>Đang tải dữ liệu...</p>
+        </div>
+        <div class="admin-section-head">
+          <div>
+            <h2>Bài đã xuất bản / bài cần chỉnh sửa</h2>
+            <p>
+              Admin có thể sửa tiêu đề, chuyên mục, ảnh, mô tả, nội dung và
+              trạng thái.
+            </p>
+          </div>
+        </div>
+        <div id="managed-articles" class="admin-article-list">
+          <p>Đang tải dữ liệu...</p>
+        </div>
+        <div id="admin-message" role="status" aria-live="polite"></div>
+      </section>
+      <section
+        class="admin-panel card shadow-sm"
+        id="admin-access-error"
+        hidden
+      >
+        <h2 id="admin-access-title">Không có quyền truy cập</h2>
+        <p id="admin-access-text">
+          Bạn cần đăng nhập bằng tài khoản Admin để truy cập khu vực quản trị.
+        </p>
+        <a id="admin-access-link" href="./login.html">Đăng nhập</a>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-shell">
+        <div class="footer-main">
+          <section class="footer-brand" aria-label="Giới thiệu NEWS 24H">
+            <a
+              class="footer-logo"
+              href="./index.html"
+              aria-label="NEWS 24H - Trang chủ"
+            >
+              <img src="./img/avatar.png" alt="Logo NEWS 24H" loading="lazy" />
+              <span>NEWS <b>24H</b></span>
+            </a>
+            <p>
+              NEWS 24H cập nhật những thông tin đáng chú ý về chính trị, kinh
+              tế, xã hội, thế giới, thể thao và đời sống. Nhanh chóng, rõ nguồn
+              và đa chiều.
+            </p>
+            <span class="footer-brand-note"
+              >Tin nhanh · Tin chuẩn · Tin hữu ích</span
+            >
+          </section>
+          <nav class="footer-section" aria-label="Liên kết">
+            <h2>Khám phá</h2>
+            <ul>
+              <li><a href="./index.html">Trang chủ</a></li>
+              <li><a href="./search.html?q=">Tìm kiếm tin tức</a></li>
+              <li><a href="./compose.html">Gửi bài cộng tác</a></li>
+              <li><a href="./contact.html">Liên hệ tòa soạn</a></li>
+            </ul>
+          </nav>
+          <nav class="footer-section" aria-label="Chuyên mục">
+            <h2>Chuyên mục</h2>
+            <ul>
+              <li>
+                <a href="./category.html?category=chinh-tri">Chính trị</a>
+              </li>
+              <li><a href="./category.html?category=thoi-su">Thời sự</a></li>
+              <li>
+                <a href="./category.html?category=kinh-doanh">Kinh doanh</a>
+              </li>
+              <li><a href="./category.html?category=the-gioi">Thế giới</a></li>
+              <li><a href="./category.html?category=the-thao">Thể thao</a></li>
+            </ul>
+          </nav>
+          <section
+            class="footer-section footer-contact"
+            aria-label="Thông tin tòa soạn"
+          >
+            <h2>Kết nối tòa soạn</h2>
+            <p>
+              <span aria-hidden="true">☎</span
+              ><a href="tel:0900242424">0900.24.24.24</a>
+            </p>
+            <p>
+              <span aria-hidden="true">✉</span
+              ><a href="mailto:news24h@gmail.com">news24h@gmail.com</a>
+            </p>
+            <p><span aria-hidden="true">⌖</span>Quận Hoàn Kiếm, Hà Nội</p>
+            <a class="footer-contribute" href="./compose.html"
+              >Gửi bài cho NEWS 24H <span aria-hidden="true">→</span></a
+            >
+          </section>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 Báo điện tử NEWS 24H. All rights reserved.</span>
+          <a
+            href="#top"
+            onclick="
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              return false;
+            "
+            >Về đầu trang ↑</a
+          >
+        </div>
+      </div>
+    </footer>
+    <div class="admin-modal" id="admin-edit-modal" hidden>
+      <div class="admin-modal-backdrop" data-close-modal></div>
+      <section
+        class="admin-editor-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="admin-editor-title"
+      >
+        <div class="admin-modal-head">
+          <div>
+            <span>BIÊN TẬP NỘI DUNG</span>
+            <h2 id="admin-editor-title">Chỉnh sửa bài viết</h2>
+          </div>
+          <button type="button" data-close-modal aria-label="Đóng">×</button>
+        </div>
+        <form id="admin-edit-form">
+          <label
+            >Tiêu đề<input
+              id="edit-title"
+              required
+              maxlength="160"
+              class="form-control"
+          /></label>
+          <div class="admin-edit-grid">
+            <label
+              >Chuyên mục<select
+                id="edit-category"
+                class="form-select"
+              ></select></label
+            ><label
+              >Trạng thái<select id="edit-status" class="form-select">
+                <option value="pending">Chờ duyệt</option>
+                <option value="published">Đã xuất bản</option>
+                <option value="rejected">Yêu cầu chỉnh sửa</option>
+                <option value="hidden">Ẩn bài viết</option>
+                <option value="draft">Bản nháp</option>
+              </select></label
+            >
+          </div>
+          <label
+            >Ảnh đại diện (URL)<input
+              id="edit-poster"
+              type="url"
+              class="form-control"
+          /></label>
+          <label
+            >Mô tả ngắn<textarea
+              id="edit-description"
+              rows="2"
+              required
+              class="form-control"
+            ></textarea>
+          </label>
+          <label
+            >Nội dung HTML đã biên tập<textarea
+              id="edit-content"
+              rows="12"
+              required
+              class="form-control"
+            ></textarea>
+          </label>
+          <div class="admin-modal-actions">
+            <button type="button" class="admin-cancel" data-close-modal>
+              Hủy</button
+            ><button
+              type="submit"
+              class="admin-save btn btn-primary"
+              id="admin-save-btn"
+            >
+              Lưu thay đổi
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" src="./js/header.js"></script>
+    <script type="module" src="./js/script.js"></script>
+    <script type="module" src="./js/admin-articles.js"></script>
+    <script type="module" src="./js/admin-users.js"></script>
+    <script type="module" src="./js/chatbot.js"></script>
+  </body>
+</html>

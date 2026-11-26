@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="./img/avatar.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d47a1">
+  <title>Đăng ký | NEWS 24H</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  
+  <link rel="stylesheet" href="./css/style2.css">
+  <link rel="stylesheet" href="./css/bootstrap-news-theme.css">
+</head>
+<body class="auth-page">
+  <main class="box auth-box" id="register-section">
+    <a class="brand-mark" href="./index.html" aria-label="NEWS 24H">NEWS<span>24H</span></a>
+    <div class="profile"><img src="./img/avatar.png" alt="Logo NEWS 24H" class="avatar"></div>
+    <h2>Tạo tài khoản</h2>
+    <p class="auth-subtitle">Tham gia đọc tin trên NEWS 24H.</p>
+    <p id="register-message" class="form-message" role="status" aria-live="polite"></p>
+    <form id="register-form">
+      <label for="register-email">Email</label>
+      <input id="register-email" name="email" type="email" placeholder="name@example.com" autocomplete="email" required class="form-control">
+      <label for="register-password">Mật khẩu</label>
+      <div class="password-wrap">
+        <input id="register-password" name="password" type="password" placeholder="Ít nhất 6 ký tự, có chữ hoa, chữ thường và số" autocomplete="new-password" required minlength="6" class="form-control">
+        <button class="toggle-password" type="button" data-target="register-password" aria-label="Hiện mật khẩu" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+      <label for="register-confirm-password">Nhập lại mật khẩu</label>
+      <div class="password-wrap">
+        <input id="register-confirm-password" name="confirm-password" type="password" placeholder="Nhập lại mật khẩu" autocomplete="new-password" required class="form-control">
+        <button class="toggle-password" type="button" data-target="register-confirm-password" aria-label="Hiện mật khẩu" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+      <button id="register-btn" class="primary-btn btn btn-primary" type="submit">Tạo tài khoản</button>
+    </form>
+    <div class="divider"><span>Hoặc đăng ký với</span></div>
+    <button id="google-login-btn" type="button" class="btn-google btn btn-outline-primary"><img class="google-icon" src="./img/google-g.svg" alt=""> Tiếp tục bằng Google</button>
+    <p class="auth-foot">Đã có tài khoản? <a href="./login.html">Đăng nhập ngay</a></p>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script type="module" src="./js/script.js"></script>
+  <script type="module" src="./js/chatbot.js"></script>
+</body>
+</html>

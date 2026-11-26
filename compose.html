@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="./img/avatar.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff"><title>Soạn thảo bài báo | NEWS 24H</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  
+  <link rel="stylesheet" href="./css/news-header.css"><link rel="stylesheet" href="./css/compose.css">
+  <link rel="stylesheet" href="./css/bootstrap-news-theme.css">
+  <link rel="stylesheet" href="./css/footer.css">
+</head>
+<body id="top">
+  <div id="site-header" data-base="./"></div>
+  <main class="compose-page container-xl" id="compose-page">
+    <div class="compose-heading"><span class="eyebrow">GÓC ĐỘC GIẢ · CỘNG TÁC VIÊN</span><h1>Soạn thảo bài báo</h1><p>Chia sẻ thông tin, câu chuyện và góc nhìn của bạn với cộng đồng NEWS 24H.</p></div>
+    <div class="compose-note"><strong>Quy trình biên tập:</strong> Bạn có thể lưu bản nháp để viết tiếp hoặc gửi bài cho Ban biên tập. Khi nhấn “Gửi biên tập”, bài sẽ được lưu ở trạng thái “Đang chờ duyệt”. Bài chỉ xuất hiện công khai sau khi Admin kiểm tra và nhấn “Duyệt & đăng”.</div>
+    <form class="compose-card card shadow-sm" id="article-compose-form">
+      <div class="compose-grid">
+        <label class="compose-field compose-wide"><span>Tiêu đề bài viết <b>*</b></span><input id="article-title" maxlength="160" required placeholder="Nhập tiêu đề rõ ràng, súc tích" class="form-control"></label>
+        <label class="compose-field"><span>Chuyên mục <b>*</b></span><select id="article-category" required class="form-select"></select></label>
+        <label class="compose-field"><span>Ảnh đại diện (URL)</span><input id="article-poster" type="url" placeholder="https://..." class="form-control"><small>Dùng liên kết ảnh có quyền sử dụng. Có thể để trống.</small></label>
+        <label class="compose-field compose-wide"><span>Mô tả ngắn <b>*</b></span><textarea id="article-description" rows="3" maxlength="320" required placeholder="Tóm tắt nội dung bài viết trong 1–3 câu..." class="form-control"></textarea></label>
+      </div>
+      <div class="editor-head"><div><h2>Nội dung bài viết <b>*</b></h2><p>Trình bày thành các đoạn rõ ràng, kiểm tra nguồn và tính chính xác trước khi gửi.</p></div><span id="word-count">0 từ</span></div>
+      <div class="editor-import"><label for="article-import-file">Nhập nội dung từ tệp .TXT / .HTML</label><input id="article-import-file" type="file" accept=".txt,.html,.htm,text/plain,text/html"><small>Tệp sẽ được đưa vào vùng soạn thảo để bạn tiếp tục chỉnh sửa trước khi gửi.</small></div>
+      <div class="editor-toolbar" role="toolbar" aria-label="Định dạng nội dung">
+        <button type="button" data-command="bold"><b>B</b></button><button type="button" data-command="italic"><i>I</i></button><button type="button" data-command="underline"><u>U</u></button>
+        <button type="button" data-command="formatBlock" data-value="h2">Tiêu đề</button><button type="button" data-command="insertUnorderedList">• Danh sách</button><button type="button" data-command="formatBlock" data-value="blockquote">Trích dẫn</button>
+      </div>
+      <div id="article-editor" class="article-editor" contenteditable="true" data-placeholder="Bắt đầu viết bài tại đây..."></div>
+      <div class="compose-bottom"><span id="compose-message" role="status" aria-live="polite"></span><div class="compose-buttons"><button type="button" class="btn-draft" id="save-draft">Lưu bản nháp</button><button type="button" class="btn-submit btn btn-primary" id="submit-article">Gửi bài – Chờ duyệt</button></div></div>
+    </form>
+    <section class="my-submissions card shadow-sm"><div class="editor-head"><div><h2>Bài viết của tôi</h2><p>Theo dõi tiến trình: Bản nháp → Đang chờ duyệt → Đã xuất bản hoặc Cần chỉnh sửa.</p></div></div><div id="my-articles-list" class="my-articles-list"><p>Đang tải bài viết...</p></div></section>
+  </main>
+<footer class="site-footer">
+  <div class="footer-shell">
+    <div class="footer-main">
+      <section class="footer-brand" aria-label="Giới thiệu NEWS 24H">
+        <a class="footer-logo" href="./index.html" aria-label="NEWS 24H - Trang chủ">
+          <img src="./img/avatar.png" alt="Logo NEWS 24H" loading="lazy">
+          <span>NEWS <b>24H</b></span>
+        </a>
+        <p>NEWS 24H cập nhật những thông tin đáng chú ý về chính trị, kinh tế, xã hội, thế giới, thể thao và đời sống. Nhanh chóng, rõ nguồn và đa chiều.</p>
+        <span class="footer-brand-note">Tin nhanh · Tin chuẩn · Tin hữu ích</span>
+      </section>
+      <nav class="footer-section" aria-label="Liên kết">
+        <h2>Khám phá</h2>
+        <ul>
+          <li><a href="./index.html">Trang chủ</a></li>
+          <li><a href="./search.html?q=">Tìm kiếm tin tức</a></li>
+          <li><a href="./compose.html">Gửi bài cộng tác</a></li>
+          <li><a href="./contact.html">Liên hệ tòa soạn</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-section" aria-label="Chuyên mục">
+        <h2>Chuyên mục</h2>
+        <ul>
+          <li><a href="./category.html?category=chinh-tri">Chính trị</a></li>
+          <li><a href="./category.html?category=thoi-su">Thời sự</a></li>
+          <li><a href="./category.html?category=kinh-doanh">Kinh doanh</a></li>
+          <li><a href="./category.html?category=the-gioi">Thế giới</a></li>
+          <li><a href="./category.html?category=the-thao">Thể thao</a></li>
+        </ul>
+      </nav>
+      <section class="footer-section footer-contact" aria-label="Thông tin tòa soạn">
+        <h2>Kết nối tòa soạn</h2>
+        <p><span aria-hidden="true">☎</span><a href="tel:0900242424">0900.24.24.24</a></p>
+        <p><span aria-hidden="true">✉</span><a href="mailto:news24h@gmail.com">news24h@gmail.com</a></p>
+        <p><span aria-hidden="true">⌖</span>Quận Hoàn Kiếm, Hà Nội</p>
+        <a class="footer-contribute" href="./compose.html">Gửi bài cho NEWS 24H <span aria-hidden="true">→</span></a>
+      </section>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Báo điện tử NEWS 24H. All rights reserved.</span>
+      <a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">Về đầu trang ↑</a>
+    </div>
+  </div>
+</footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script type="module" src="./js/header.js"></script><script type="module" src="./js/script.js"></script><script type="module" src="./js/article-compose.js"></script>
+  <script type="module" src="./js/chatbot.js"></script>
+</body>
+</html>

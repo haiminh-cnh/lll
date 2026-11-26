@@ -1,0 +1,88 @@
+/* Kiểu chữ, màu nền và footer dùng chung cho trang liên hệ và bài viết. */
+:root {
+  --navy: #0b1f44;
+  --navy-deep: #071630;
+  --blue: #0d47a1;
+  --blue2: #1565c0;
+  --red: #d71920;
+  --paper: #f3f6fb;
+  --ink: #17243b;
+  --muted: #69758a;
+  --line: #e7edf5;
+}
+body {
+  font-family: "Be Vietnam Pro", "Segoe UI", Arial, sans-serif !important;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+  line-height: 1.6;
+}
+footer {
+  background: #071630 !important;
+  color: #fff !important;
+  padding: 52px clamp(18px, 5vw, 76px) 24px !important;
+  margin-top: 30px !important;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.2fr;
+  gap: 38px;
+  max-width: 1300px;
+  margin: auto;
+  text-align: left;
+}
+.footer-col h4 {
+  margin: 0 0 14px !important;
+  font-size: 14px !important;
+  text-transform: uppercase;
+  color: #ff7c84 !important;
+  letter-spacing: 1px;
+}
+.footer-col p,
+.footer-col a {
+  font-size: 13px !important;
+  color: #b8c5d9 !important;
+  line-height: 1.9;
+}
+.footer-col p {
+  opacity: 1 !important;
+}
+.footer-col ul {
+  list-style: none;
+}
+.footer-col ul li {
+  margin-bottom: 5px;
+}
+.footer-col a {
+  text-decoration: none !important;
+}
+.footer-col a:hover {
+  color: #fff !important;
+  padding-left: 2px;
+}
+.footer-copy {
+  text-align: center;
+  padding-top: 24px !important;
+  margin-top: 30px !important;
+  border-top: 1px solid #ffffff18;
+  font-size: 12px !important;
+  color: #8796ad !important;
+  opacity: 1 !important;
+}
+@media (max-width: 850px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .footer-col:first-child {
+    grid-column: 1/-1;
+  }
+}
+@media (max-width: 520px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-col:first-child {
+    grid-column: auto;
+  }
+}
